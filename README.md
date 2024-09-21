@@ -22,12 +22,33 @@ Replacement brake light for motorcycle with blinky and secret powers
         * 3 taps: Party Mode for 1m
         * 4 taps: Explosion
         * 5 taps: Police/Ambulance flashing for 1m
-    * Media Control
+    * Media Control Mode
         * 2 taps + length of next tap: Volume
-        * 
+    * Evil Mode
+        * Use wifi to rickroll everyone in range
+        * Enabled with morse code for EVIL `. ...- .. .-..`
 
 ## Kickstarter
+[Started work on this](https://www.kickstarter.com/projects/1743331958/267604435/edit/rewards?tab=items)
 * Founders award = Send us your brake light, we'll sned it back rewired
 * Supporter 1 = Complete kit: Standard light socket plugs + a strip of neopixels you can just jam into whatever you currently have
 * Supporter level 2 = Parts kit: hardware not connected
 * Supporter level 3 = I just wanna see it happen
+
+## Brakelights song
+<pre>
+C (A bouncey C)   G (maybe F?)
+Your brakelights  aren't that Bright
+C                 G
+Espiecially       at night
+C                 C
+Make'm Blink      Make'm flah
+G                 G
+Like that car     From Night Rider
+</pre>
+
+## License
+I dunno... I figure if you use the code and stuff to make money you should gimme a cut. Let's go with MIT for now
+
+MIT License, see [LICENSE](https://github.com/Beta-Technologies/grafana-panel-qrcode/blob/main/LICENSE).
+
