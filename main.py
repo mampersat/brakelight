@@ -45,10 +45,24 @@ def night_rider():
     # cycle from -1 to 1 over a second
     for i in range(lights):
         # looks kewl on 4 pixels... adjust for more
-        # should alwyas have at least 1 pixel on, but probably about 1/3 of pixels on at any time
+        # should alwyas have at least 1 pixel on, but probably about 1/3 of pixels on at any time, oh you thought you didn't need math in school?
         s = math.sin(utime.ticks_ms() / 1000 * 2 * math.pi + i) 
         np[i] = (int(s * 128) + 128, 0, 0)
     np.write()
+
+def smooth_transition():
+    ## TODO: The saftey committee identified this idea as vile source of potential bugs and an awesome oppertunity to brake the system, whose whole puprose is to brake in the first place
+    ## TODO: DO NOT IMPLEMENT
+    ## TODO: good first commit
+
+def ambient_mode():
+    ## TODO: another stupid idea sure to be full of bugs, can we start with WIFI?
+    ## TODO: DO NOT IMPLEMENT
+    ## TODO: FUCK WIFI
+    ## TODO: good first commit
+
+def party():
+    ## TODO: primary directive shit here
 
 def handle_pin_change(pin):
     global mode
