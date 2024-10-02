@@ -17,13 +17,13 @@ np = neopixel.NeoPixel(machine.Pin(neopixel_pin), lights)
 
 def cruise():
     for i in range(lights):
-        np[i] = (64, 0, 0)
+        np[i] = (64, 64, 64)
     np.write()
 
 
 def brake():
     for i in range(lights):
-        np[i] = (255, 0, 0)
+        np[i] = (255, 255, 255)
     np.write()
 
 
@@ -54,7 +54,7 @@ def night_rider():
         # looks kewl on 4 pixels... adjust for more
         # should alwyas have at least 1 pixel on, but probably about 1/3 of pixels on at any time, oh you thought you didn't need math in school?
         s = math.sin(utime.ticks_ms() / 1000 * 2 * math.pi + i) 
-        np[i] = (int(s * 128) + 128, 0, 0)
+        np[i] = (int(s * 128) + 128, int(s * 128) + 128, int(s * 128) + 128)
     np.write()
 
 
@@ -83,7 +83,7 @@ def night_rider():
         # looks kewl on 4 pixels... adjust for more
         # should alwyas have at least 1 pixel on, but probably about 1/3 of pixels on at any time, oh you thought you didn't need math in school?
         s = math.sin(utime.ticks_ms() / 1000 * 2 * math.pi + i) 
-        np[i] = (int(s * 128) + 128, 0, 0)
+        np[i] = (int(s * 128) + 128, int(s * 128) + 128, int(s * 128) + 128)
     np.write()
 
 
