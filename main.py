@@ -115,6 +115,13 @@ def handle_brake_pin_change(pin):
 
 def handle_button_pin_change(pin):
     global mode
+
+    # debounce
+    initial_value = pin.value()
+    utime.sleep_ms(50)  # Add a delay to debounce
+    if pin.value() != initial_value:
+        return
+
     print(f"pin changed to {pin.value()}")
 
     if pin.value() == 1:
@@ -131,7 +138,7 @@ button_pin.irq(trigger=machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING, handler
 
 
 # Main loop
-mode = party # cruise
+mode = night_rider
 while True:
     # time.sleep(0.1)  # Sleep is for the weak
     mode()
