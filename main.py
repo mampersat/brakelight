@@ -15,6 +15,12 @@ brake_pin = machine.Pin(brake_pin_gpio, machine.Pin.IN, machine.Pin.PULL_DOWN)
 button_pin = machine.Pin(button_pin_gpio, machine.Pin.IN, machine.Pin.PULL_UP)
 np = neopixel.NeoPixel(machine.Pin(neopixel_pin), lights)
 
+# Button/Brake states
+brake_value = 0
+button_value = 0
+tap_counter = 0
+tap_start_time = utime.ticks_ms()
+
 def cruise():
     for i in range(lights):
         np[i] = (64, 64, 64)
@@ -67,8 +73,8 @@ def party():
         # looks kewl on 4 pixels... adjust for more
         # should alwyas have at least 1 pixel on: which this kinda solves using the G and B values
         s = math.sin(utime.ticks_ms() / 1000 * 2 * math.pi + i) 
-        g = random.randint(0,10)
-        b = random.randint(0,10)
+        g = random.randint(0,100)
+        b = random.randint(0,100)
         np[i] = (int(s * 128) + 128, g, b)
     np.write()
 
@@ -102,6 +108,32 @@ def ambient_mode():
     todo = "DO NOT IMPLEMENT"
 
 
+def tap():
+    '''
+    Register a tap and check if we've triggered a pattern
+    '''
+    global tap_start_time, tap_counter, mode
+
+    now = utime.ticks_ms()
+
+    # ignore sucessive taps under 100ms
+    if now - tap_start_time < 100:
+        return
+    
+    # if it's been over 1s since last time, start the timer
+    if now - tap_start_time > 1000:
+        tap_counter = 1
+        tap_start_time = now
+        return
+    
+    tap_counter += 1
+
+    if tap_counter == 3:
+        print(f"Tap count = {tap_counter}")
+        mode = party
+
+
+
 def handle_brake_pin_change(pin):
     global mode
     print(f"pin changed to {pin.value()}")
@@ -114,19 +146,19 @@ def handle_brake_pin_change(pin):
         mode = night_rider
 
 def handle_button_pin_change(pin):
-    global mode
+    global mode, button_value
 
-    # debounce
-    initial_value = pin.value()
-    utime.sleep_ms(50)  # Add a delay to debounce
-    if pin.value() != initial_value:
+    # Did the value change?
+    value = pin.value()
+    if value == button_value:
         return
 
-    print(f"pin changed to {pin.value()}")
+    button_value = value
 
-    if pin.value() == 1:
+    if value == 1:
         print("Button pressed")
         mode = brake_flash
+        tap()
     else:
         print("Button released")
         mode = night_rider
