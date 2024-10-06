@@ -167,6 +167,8 @@ def handle_brake_pin_change(pin):
     # Did the value change?
     if value == brake_value:
         return
+    
+    brake_value = value
 
     if pin.value() == 1:
         print("Brake pressed")
