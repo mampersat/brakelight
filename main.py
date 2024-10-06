@@ -21,13 +21,13 @@ button_value = 0
 tap_counter = 0
 tap_start_time = utime.ticks_ms()
 
-def cruise():
+def dim():
     for i in range(lights):
         np[i] = (64, 64, 64)
     np.write()
 
 
-def brake():
+def bright():
     for i in range(lights):
         np[i] = (255, 255, 255)
     np.write()
@@ -39,16 +39,40 @@ def off():
     np.write()
 
 
-def brake_flash():
+def flash():
     blinks_per_second = 3
     blink_interval_ms = 1000 / blinks_per_second  # Calculate the interval in milliseconds
     time_mod = utime.ticks_ms() % blink_interval_ms
     # print(f"{utime.ticks_ms()} : {time_mod}")
     if time_mod < (blink_interval_ms / 2):
-        brake()
+        bright()
     else:
         off()
 
+def flash_fast():
+    global tap_start_time, mode, cruise_mode, brake_mode
+
+    blinks_per_second = 3
+    blink_interval_ms = 500 / blinks_per_second  # Calculate the interval in milliseconds
+    time_mod = utime.ticks_ms() % blink_interval_ms
+    # print(f"{utime.ticks_ms()} : {time_mod}")
+    if time_mod < (blink_interval_ms / 2):
+        bright()
+    else:
+        off()
+
+    # if held for 5 seconds, switch brake mode
+    now = utime.ticks_ms()
+    if now - tap_start_time > 5000:
+        # switch from boring to blinky mode
+        if brake_mode == flash:
+            cruise_mode = dim
+            brake_mode = bright
+        else:
+            cruise_mode = night_rider
+            brake_mode = flash
+
+        mode = flash
 
 def night_rider():
     cycle_speed_seconds = 1
@@ -130,20 +154,28 @@ def tap():
 
     if tap_counter == 3:
         print(f"Tap count = {tap_counter}")
-        mode = party
+
+        mode = flash_fast
 
 
 
 def handle_brake_pin_change(pin):
-    global mode
-    print(f"pin changed to {pin.value()}")
+    global mode, brake_value
+
+    value = pin.value()
+
+    # Did the value change?
+    if value == brake_value:
+        return
 
     if pin.value() == 1:
         print("Brake pressed")
-        mode = brake_flash
+        mode = brake_mode
+        tap()
+
     else:
         print("Brake released")
-        mode = night_rider
+        mode = cruise_mode
 
 def handle_button_pin_change(pin):
     global mode, button_value
@@ -157,11 +189,11 @@ def handle_button_pin_change(pin):
 
     if value == 1:
         print("Button pressed")
-        mode = brake_flash
+        mode = brake_mode
         tap()
     else:
         print("Button released")
-        mode = night_rider
+        mode = cruise_mode
 
 
 # Attach interrupts to the pins
@@ -169,8 +201,13 @@ brake_pin.irq(trigger=machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING, handler=
 button_pin.irq(trigger=machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING, handler=handle_button_pin_change)
 
 
+# initial state
+brake_mode = bright
+cruise_mode = dim
+
+mode = cruise_mode
+
 # Main loop
-mode = night_rider
 while True:
     # time.sleep(0.1)  # Sleep is for the weak
     mode()
