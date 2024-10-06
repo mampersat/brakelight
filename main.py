@@ -202,8 +202,14 @@ button_pin.irq(trigger=machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING, handler
 
 
 # initial state
-brake_mode = bright
-cruise_mode = dim
+
+# BORING
+# brake_mode = bright
+# cruise_mode = dim
+
+# FUN
+brake_mode = flash
+cruise_mode = night_rider
 
 mode = cruise_mode
 
